@@ -1,0 +1,46 @@
+name: Build Zelda IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          brew install xcodegen zstd spirv-cross
+          brew install --cask dotnet-sdk
+          python3 -m pip install lz4 capstone fonttools gdown
+
+      - name: Setup prod.keys
+        run: |
+          mkdir -p ~/.keys
+          echo "${{ secrets.PROD_KEYS }}" > ~/.keys/prod.keys
+
+      - name: Download NSP files from Google Drive
+        run: |
+          mkdir -p ~/Documents/Games/Zelda
+          # Descargar desde Google Drive usando gdown
+          gdown https://drive.google.com/uc?id=1WwyhajRhEXi9DmJYi00E8h41-NeqpZjo -O ~/Documents/Games/Zelda/game_files.zip || gdown 1WwyhajRhEXi9DmJYi00E8h41-NeqpZjo -O ~/Documents/Games/Zelda/game_files.zip
+          
+          # Extraer los NSP (juego base, update y DLCs)
+          cd ~/Documents/Games/Zelda
+          if [ -f game_files.zip ]; then
+            unzip game_files.zip
+            rm game_files.zip
+          fi
+
+      - name: Run IPA Build
+        run: |
+          python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zelda-IPA
+          path: ~/Documents/Games/Zelda/*.ipa
