@@ -15,7 +15,7 @@ jobs:
         run: |
           brew install xcodegen zstd spirv-cross
           brew install --cask dotnet-sdk
-          python3 -m pip install lz4 capstone fonttools gdown
+          python3 -m pip install lz4 capstone fonttools gdown --break-system-packages
 
       - name: Setup prod.keys
         run: |
