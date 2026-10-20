@@ -26,7 +26,11 @@ jobs:
         run: |
           mkdir -p ~/Documents/Games/Zelda
           # Descargar desde Google Drive usando gdown
-          gdown https://drive.google.com/uc?id=1C3Rqn9upZ16qLISSJeyyaNUOxT0vb6xz -O ~/Documents/Games/Zelda/game_files.zip || gdown 1WwyhajRhEXi9DmJYi00E8h41-NeqpZjo -O ~/Documents/Games/Zelda/game_files.zip
+          gdown https://drive.google.com/uc?id=1C3Rqn9upZ16qLISSJeyyaNUOxT0vb6xz -O ~/Documents/Games/Zelda/game_files.zip
+
+        # Extraer los NSP (juego base, update y DLCs)
+        cd ~/Documents/Games/Zelda
+        if [ -f game_files.zip ]; then
           
           # Extraer los NSP (juego base, update y DLCs)
           cd ~/Documents/Games/Zelda
@@ -37,7 +41,7 @@ jobs:
 
       - name: Run IPA Build
         run: |
-          python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys
+          python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys --update-lock
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
