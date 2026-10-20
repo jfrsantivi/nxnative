@@ -21,24 +21,18 @@ jobs:
         run: |
           mkdir -p ~/.keys
           echo "${{ secrets.PROD_KEYS }}" > ~/.keys/prod.keys
-
-      - name: Download NSP files from Google Drive
-        run: |
-          mkdir -p ~/Documents/Games/Zelda
-          # Descargar desde Google Drive usando gdown
-          gdown https://drive.google.com/uc?id=1C3Rqn9upZ16qLISSJeyyaNUOxT0vb6xz -O ~/Documents/Games/Zelda/game_files.zip
+- name: Download NSP files from Google Drive
+      run: |
+        mkdir -p ~/Documents/Games/Zelda
+        # Descargar desde Google Drive usando gdown
+        gdown https://drive.google.com/uc?id=1C3Rqn9upZ16qLISSJeyyaNUOxT0vb6xz -O ~/Documents/Games/Zelda/game_files.zip
 
         # Extraer los NSP (juego base, update y DLCs)
         cd ~/Documents/Games/Zelda
         if [ -f game_files.zip ]; then
-          
-          # Extraer los NSP (juego base, update y DLCs)
-          cd ~/Documents/Games/Zelda
-          if [ -f game_files.zip ]; then
-            unzip game_files.zip
-            rm game_files.zip
-          fi
-
+          unzip -o game_files.zip
+          rm game_files.zip
+        fi
       - name: Run IPA Build
         run: |
           python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys --update-lock
