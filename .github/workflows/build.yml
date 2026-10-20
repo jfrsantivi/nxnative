@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir -p ~/Documents/Games/Zelda
           # Descargar desde Google Drive usando gdown
-          gdown https://drive.google.com/uc?id=1WwyhajRhEXi9DmJYi00E8h41-NeqpZjo -O ~/Documents/Games/Zelda/game_files.zip || gdown 1WwyhajRhEXi9DmJYi00E8h41-NeqpZjo -O ~/Documents/Games/Zelda/game_files.zip
+          gdown https://drive.google.com/uc?id=1C3Rqn9upZ16qLISSJeyyaNUOxT0vb6xz -O ~/Documents/Games/Zelda/game_files.zip || gdown 1WwyhajRhEXi9DmJYi00E8h41-NeqpZjo -O ~/Documents/Games/Zelda/game_files.zip
           
           # Extraer los NSP (juego base, update y DLCs)
           cd ~/Documents/Games/Zelda
