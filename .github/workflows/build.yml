@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install huggingface_hub
+        pip install huggingface_hub lz4
 
     - name: Download NSP files from Hugging Face
       run: |
@@ -27,7 +27,7 @@ jobs:
         # Descargar el ZIP usando tu repositorio de Hugging Face
         python3 -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='Jfrsantivi/misjuegos', filename='Hyrule Warriors Age of Calamity [Guardian of Remembrance][01002B00111A3004].ZIP', repo_type='dataset', local_dir='/Users/runner/Documents/Games/Zelda')"
 
-        # Renombrar y extraer
+        # Renombrar y extraer los NSP
         cd ~/Documents/Games/Zelda
         mv 'Hyrule Warriors Age of Calamity [Guardian of Remembrance][01002B00111A3004].ZIP' game_files.zip
         if [ -f game_files.zip ]; then
