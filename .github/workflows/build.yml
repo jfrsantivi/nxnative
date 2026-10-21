@@ -25,11 +25,8 @@ jobs:
         mkdir -p ~/Documents/Games/Zelda
         cd ~/Documents/Games/Zelda
 
-        # Obtener el enlace directo del archivo desde la API de GoFile
-        FILE_URL=$(curl -s "https://api.gofile.io/contents/3IEppXUV?wt=41d63d4ae120" | python3 -c "import sys, json; data=json.load(sys.stdin); print(list(data['data']['children'].values())[0]['link'])")
-
-        # Descargar el ZIP
-        curl -L -o game_files.zip "$FILE_URL"
+        # Descargar directamente el archivo ZIP usando curl con redirecciones
+        curl -L -H "User-Agent: Mozilla/5.0" -o game_files.zip "https://store1.gofile.io/download/direct/41d63d4ae120/game_files.zip"
 
         # Extraer los NSP
         if [ -f game_files.zip ]; then
