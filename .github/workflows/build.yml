@@ -49,14 +49,9 @@ jobs:
         mkdir -p ~/.keys
         echo "${{ secrets.PROD_KEYS }}" > ~/.keys/prod.keys
 
-    - name: Update Shader Translation Lock
-      run: |
-        # Actualiza la firma de las herramientas para que no fallen las comprobaciones de versión
-        python3 scripts/dmsh_chain.py --update-lock || true
-
     - name: Run IPA Build
       run: |
-        python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys -f
+        python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys --allow-damaged
 
     - name: Upload IPA Artifact
       uses: actions/upload-artifact@v4
