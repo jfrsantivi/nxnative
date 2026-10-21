@@ -50,8 +50,10 @@ jobs:
         echo "${{ secrets.PROD_KEYS }}" > ~/.keys/prod.keys
 
     - name: Run IPA Build
+      env:
+        NXNATIVE_IGNORE_TOOL_LOCK: "1"
       run: |
-        python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys --ignore-tool-lock
+        python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys
 
     - name: Upload IPA Artifact
       uses: actions/upload-artifact@v4
