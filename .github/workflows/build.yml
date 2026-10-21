@@ -19,16 +19,19 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install gdown
 
-    - name: Download NSP files from Google Drive
+    - name: Download NSP files from GoFile
       run: |
         mkdir -p ~/Documents/Games/Zelda
-        # Descargar el ZIP desde Google Drive
-        gdown https://drive.google.com/uc?id=1C1ftMiBaIQxv2tHMPgurkHGcfm88v3Xg -O ~/Documents/Games/Zelda/game_files.zip
+        cd ~/Documents/Games/Zelda
+
+        # Obtener el enlace directo del archivo desde la API de GoFile
+        FILE_URL=$(curl -s "https://api.gofile.io/contents/3IEppXUV?wt=41d63d4ae120" | python3 -c "import sys, json; data=json.load(sys.stdin); print(list(data['data']['children'].values())[0]['link'])")
+
+        # Descargar el ZIP
+        curl -L -o game_files.zip "$FILE_URL"
 
         # Extraer los NSP
-        cd ~/Documents/Games/Zelda
         if [ -f game_files.zip ]; then
           unzip -o game_files.zip
           rm game_files.zip
