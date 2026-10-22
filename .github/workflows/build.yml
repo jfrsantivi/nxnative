@@ -51,7 +51,10 @@ jobs:
 
     - name: Run IPA Build
       run: |
-        python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys --allow-damaged
+        # Actualizar el lockfile de la cadena de traducción de shaders a la versión actual de macOS/brew
+        python3 scripts/dmsh_chain.py --update-lock
+        # Ejecutar la compilación limpia de la IPA
+        python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys
 
     - name: Upload IPA Artifact
       uses: actions/upload-artifact@v4
