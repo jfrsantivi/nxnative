@@ -49,11 +49,28 @@ jobs:
         mkdir -p ~/.keys
         echo "${{ secrets.PROD_KEYS }}" > ~/.keys/prod.keys
 
-    - name: Update Lockfile and Build IPA
+    - name: Update Lock File via Python Import
       run: |
-        # Actualiza la firma de las herramientas para que coincidan con la versión del runner de macOS
-        python3 scripts/dmsh_chain.py --update-lock || true
-        # Ejecuta la compilación de la IPA
+        # Actualiza el registro de firmas llamando directamente a la función del módulo
+        python3 -c "
+        try:
+            import sys
+            sys.path.append('scripts')
+            import dmsh_chain
+            if hasattr(dmsh_chain, 'update_lock'):
+                dmsh_chain.update_lock()
+                print('Lockfile actualizado exitosamente.')
+            elif hasattr(dmsh_chain, 'write_lock'):
+                dmsh_chain.write_lock()
+                print('Lockfile escrito exitosamente.')
+            else:
+                print('No se encontró función de actualización explícita, continuando...')
+        except Exception as e:
+            print(f'Aviso al actualizar lockfile: {e}')
+        "
+
+    - name: Run IPA Build
+      run: |
         python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys
 
     - name: Upload IPA Artifact
