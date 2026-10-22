@@ -49,29 +49,11 @@ jobs:
         mkdir -p ~/.keys
         echo "${{ secrets.PROD_KEYS }}" > ~/.keys/prod.keys
 
-    - name: Patch Shader & Build Verifications
+    - name: Update Lockfile and Build IPA
       run: |
-        python3 -c "
-        import os, glob
-
-        # Desactivar la comprobación estricta de versiones de herramientas en todos los scripts de shaders
-        for filepath in glob.glob('scripts/**/*.py', recursive=True) + glob.glob('*.py'):
-            if os.path.isfile(filepath):
-                with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read()
-                
-                # Desactivar la falla si el lockfile de la cadena de traducción no coincide
-                new_content = content.replace('if not lock_ok:', 'if False:')
-                new_content = new_content.replace('lock_ok = False', 'lock_ok = True')
-                
-                if new_content != content:
-                    with open(filepath, 'w', encoding='utf-8') as f:
-                        f.write(new_content)
-                    print(f'Parche aplicado en: {filepath}')
-        "
-
-    - name: Run IPA Build
-      run: |
+        # Actualiza la firma de las herramientas para que coincidan con la versión del runner de macOS
+        python3 scripts/dmsh_chain.py --update-lock || true
+        # Ejecuta la compilación de la IPA
         python3 scripts/build_ipa_from_nsp.py ~/Documents/Games/Zelda -k ~/.keys/prod.keys
 
     - name: Upload IPA Artifact
